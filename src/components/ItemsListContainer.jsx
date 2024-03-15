@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ItemList from "./ItemList";
+import { getProducts } from "../firebase/firebase.js";
 
 
 import React from 'react';
@@ -11,14 +12,14 @@ const ItemsListContainer = () => {
 
 
     useEffect(() => {
-        fetch('../data/productos.json')
-            .then(response => response.json())
+        getProducts()
             .then(prods => {
+                const productos = prods.filter(prod => prod.stok > 0)
                 if (cid) {
                     const productosFiltrados = prods.filter(prod => prod.category == cid)
                     setProducts(productosFiltrados)
                 } else {
-                    setProducts(prods)
+                    setProducts(productos)
 
                 }
 
@@ -28,8 +29,8 @@ const ItemsListContainer = () => {
 
 
     return (
-        <div>
-            <ItemList products={products} />
+        <div className="flex flex-wrap space-y-6">
+            <ItemList products={products} plantilla="Item" />
         </div>
     );
 }

@@ -1,27 +1,25 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import ItemList from "./ItemList";
 import ItemDetail from "./ItemDetail";
+import { getProduct } from "../firebase/firebase.js";
 
 import React from 'react';
 
 
-
 const ItemDetaislContainer = () => {
-    
-    useEffect(()=>{
-        fetch('../data/productos.jason')
-            .then(response => response.json())
-            .then(productos =>{
-                const prod = productos.find(producto => producto.id==pid)
-                if (prod)
-                    setItem(prod)
-            })
-    })
+    const [item, setItem] = useState([])
+    const { pid } = useParams()
+
+    useEffect(() => {
+        getProduct(pid)
+            .then(prod => setItem(prod))
+            .catch(error => console.log(error))
+    }, [])
     return (
-        <div className="fixed w-full  h-full flex justify-center items-center bg-black bg-opacity-50">
-            
-            <ItemDetail item= {item} />
+        <div >
+
+            <ItemDetail item={item} />
 
         </div>
     );
